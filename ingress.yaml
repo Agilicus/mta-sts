@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx-transparent
+    ingress.kubernetes.io/ssl-redirect: "true"
+  name: ingress
+  namespace: mta-sts
+spec:
+  rules:
+  - host: mta-sts.agilicus.com
+    http:
+      paths:
+      - backend:
+          serviceName: service
+          servicePort: http
+        path: /
+  - host: mta-sts.agilicus.ca
+    http:
+      paths:
+      - backend:
+          serviceName: service
+          servicePort: http
+        path: /
+  tls:
+  - hosts:
+    - mta-sts.agilicus.com
+    - mta-sts.agilicus.ca
+    secretName: mta-sts-tls
